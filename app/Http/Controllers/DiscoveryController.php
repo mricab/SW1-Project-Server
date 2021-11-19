@@ -17,125 +17,127 @@ class DiscoveryController extends Controller
 
     /* Environments */
 
-    public function EnvironmentsCreate(Request $request)
+    static public function EnvironmentsCreate(string $name, string $description)
     {
-        $endpoint = self::$url . "/v1/environments" . self::$ver;
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments"
+            . "?version=" . self::$ver;
 
         $data = [
-            "name" => "my-first-environment",
-            "description" => "exploring environments",
+            "name" => $name,
+            "description" => $description,
         ];
 
         $response = Http::withHeaders(self::$headers)
             ->withBasicAuth("apikey", self::$key)
             ->post($endpoint, $data);
 
-        return $response->collect();
+        return $response->json();
     }
 
     static public function EnvironmentsList()
     {
         $endpoint = self::$url
-            . "/v1/environments"
+            . "/v1"
+            . "/environments"
             . "?version=" . self::$ver;
 
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
     /* Single Environment */
 
-    static public function EnvironmentStatus(Request $request)
+    static public function EnvironmentStatus(string $environmentId)
     {
-        $id = $request->input('env_id');
-
-        $endpoint = self::$url . "/v1/environments"
-            . "/" . $id
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
             . "?version=" . self::$ver;
 
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    static public function EnvironmentUpdate(Request $request)
+    static public function EnvironmentUpdate(string $environmentId, string $name, string $description)
     {
-        $environmentId = $request->input('env_id');
-        $name = $request->input('name');
-        $description = $request->input('description');
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "?version=" . self::$ver;
 
         $data = [
             'name' => $name,
             'description' => $description,
         ];
 
-        $endpoint = self::$url . "/v1/environments"
-            . "/" . $environmentId
-            . "?version=" . self::$ver;
-
         $response = Http::withHeaders(self::$headers)
             ->withBasicAuth("apikey", self::$key)
             ->put($endpoint, $data);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    static public function EnvironmentDelete(Request $request)
+    static public function EnvironmentDelete(string $environmentId)
     {
-        $environmentId = $request->input('env_id');
-
-        $endpoint = self::$url . "/v1/environments"
-            . "/" . $environmentId
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
             . "?version=" . self::$ver;
 
         $response = Http::withBasicAuth("apikey", self::$key)
             ->delete($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    static public function EnvironmentFields(Request $request)
+    static public function EnvironmentFields(string $environmentId, array $collectionIds)
     {
-        $environmentId = $request->input('env_id');
-        $collectionIds = $request->input('collection_ids');
-
-        $endpoint = self::$url . "/v1"
+        $endpoint = self::$url
+            . "/v1"
             . "/environments" . "/" . $environmentId
             . "/fields"
-            . "?" . "collection_ids=" . $collectionIds
+            . "?" . "collection_ids=" . implode(",", $collectionIds)
             . "&version=" . self::$ver;
 
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
     /* Configurations */
 
-    static public function ConfigurationsList(Request $request)
+    static public function ConfigurationsCreate()
     {
-        $id = $request->input('env_id');
+        // To do
+    }
 
-        $endpoint = self::$url . "/v1/environments"
-            . "/" . $id . "/configurations"
+    static public function ConfigurationsList(string $environmentId)
+    {
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/configurations"
             . "?version=" . self::$ver;
 
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    static public function ConfigurationsDetail(Request $request)
-    {
-        $environmentId = $request->input('env_id');
-        $configurationId = $request->input('config_id');
+    /* Configuration */
 
-        $endpoint = self::$url . "/v1"
+    static public function ConfigurationDetails(string $environmentId, string $configurationId)
+    {
+        $endpoint = self::$url
+            . "/v1"
             . "/environments" . "/" . $environmentId
             . "/configurations" . "/" . $configurationId
             . "?version=" . self::$ver;
@@ -143,18 +145,37 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->collect();
+        return $response->json();
+    }
+
+    static public function ConfigurationUpdate()
+    {
+        // To do
+    }
+
+    static public function ConfigurationDelete(string $environmentId, string $configurationId)
+    {
+        $endpoint = self::$url
+        . "/v1"
+        . "/environments" . "/" . $environmentId
+        . "/configurations" . "/" . $configurationId
+        . "?version=" . self::$ver;
+
+    $response = Http::withBasicAuth("apikey", self::$key)
+        ->delete($endpoint);
+
+    return $response->json();
     }
 
     /* Collections */
 
-    public function CollectionsCreate(Request $request)
+    public function CollectionsCreate(string $environmentId, string $configurationId, string $name, string $description, string $language)
     {
-        $environmentId = $request->input('env_id');
-        $name = $request->input('name');
-        $description = $request->input('description');
-        $configurationId = $request->input('conf_id');
-        $language = $request->input('language');
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/collections"
+            . "?version=" . self::$ver;
 
         $data = [
             'name' => $name,
@@ -163,73 +184,118 @@ class DiscoveryController extends Controller
             'language' => $language,
         ];
 
-        $endpoint = self::$url . "/v1/environments"
-            . "/" . $environmentId . "/collections"
-            . "?version=" . self::$ver;
-
         $response = Http::withHeaders(self::$headers)
             ->withBasicAuth("apikey", self::$key)
             ->post($endpoint, $data);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    static public function CollectionsList(Request $request)
+    static public function CollectionsList(string $environmentId)
     {
-        $environmentId = $request->input('env_id');
-
-        $endpoint = self::$url . "/v1/environments"
-            . "/" . $environmentId . "/collections"
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/collections"
             . "?version=" . self::$ver;
 
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->collect();
+        return $response->json();
+    }
+
+    /* Query (Multiple Collections) */
+
+    static public function CollectionsQueryShort(string $environmentId, array $collectionIds, string $queryString)
+    {
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/query"
+            . "?" . "collection_ids=" . implode(",", $collectionIds)
+            . "?version=" . self::$ver
+            . "&" . "query=" . $queryString;
+
+
+        $response = Http::withBasicAuth("apikey", self::$key)
+            ->get($endpoint);
+
+        return $response->json();
+    }
+
+    static public function CollectionsQueryLong(string $environmentId, array $collectionIds, string $queryString)
+    {
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/query"
+            . "?" . "collection_ids=" . implode(",", $collectionIds)
+            . "?version=" . self::$ver;
+
+        $data = [
+            'query' => $queryString,
+        ];
+
+        $response = Http::withBasicAuth("apikey", self::$key)
+            ->post($endpoint);
+
+        return $response->json();
+    }
+
+    static public function CollectionsNotices(string $environmentId, array $collectionIds)
+    {
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/notices"
+            . "?" . "collection_ids=" . implode(",", $collectionIds)
+            . "?version=" . self::$ver;
+
+        $response = Http::withBasicAuth("apikey", self::$key)
+            ->post($endpoint);
+
+        return $response->json();
     }
 
     /* Single Collection */
 
-    static public function CollectionDetails(Request $request)
+    static public function CollectionDetails(string $environmentId, string $collectionId)
     {
-        $environmentId = $request->input('env_id');
-        $collectionId = $request->input('coll_id');
-
-        $endpoint = self::$url . "/v1/environments"
-            . "/" . $environmentId . "/collections"
-            . "/" . $collectionId
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/collections" . "/" . $collectionId
             . "?version=" . self::$ver;
 
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    static public function CollectionFields(Request $request)
+    static public function CollectionFields(string $environmentId, string $collectionId)
     {
-        $environmentId = $request->input('env_id');
-        $collectionId = $request->input('coll_id');
-
-        $endpoint = self::$url . "/v1/environments"
-            . "/" . $environmentId . "/collections"
-            . "/" . $collectionId
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/collections" . "/" . $collectionId
             . "/fields"
             . "?version=" . self::$ver;
 
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    static public function CollectionUpdate(Request $request)
+    static public function CollectionUpdate(string $environmentId, string $configurationId, string $collectionId, string $name, string $description)
     {
-        $environmentId = $request->input('env_id');
-        $collectionId = $request->input('coll_id');
-        $name = $request->input('name');
-        $description = $request->input('description');
-        $configurationId = $request->input('conf_id');
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/collections" . "/" . $collectionId
+            . "?version=" . self::$ver;
 
         $data = [
             'name' => $name,
@@ -237,45 +303,38 @@ class DiscoveryController extends Controller
             'configuration_id' => $configurationId,
         ];
 
-        $endpoint = self::$url . "/v1"
-            . "/environments" . "/" . $environmentId
-            . "/collections" . "/" . $collectionId
-            . "?version=" . self::$ver;
-
         $response = Http::withHeaders(self::$headers)
             ->withBasicAuth("apikey", self::$key)
             ->put($endpoint, $data);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    static public function CollectionDelete(Request $request)
+    static public function CollectionDelete(string $environmentId, string $collectionId)
     {
-        $environmentId = $request->input('env_id');
-        $collectionId = $request->input('coll_id');
-
-        $endpoint = self::$url . "/v1/environments"
-            . "/" . $environmentId . "/collections"
-            . "/" . $collectionId
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/collections" . "/" . $collectionId
             . "?version=" . self::$ver;
 
         $response = Http::withBasicAuth("apikey", self::$key)
             ->delete($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
     /* Documents*/
 
-    static public function DocumentsUpload(Request $request)
+    static public function DocumentsUpload(string $environmentId, string $collectionId, $file)
     {
-        $environmentId = $request->input('env_id');
-        $collectionId = $request->input('coll_id');
-        $file = $request->file('document');
+        //$file = $request->file('document');
 
-        $endpoint = self::$url . "/v1/environments"
-            . "/" . $environmentId . "/collections"
-            . "/" . $collectionId . "/documents"
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/collections" . "/" . $collectionId
+            . "/documents"
             . "?version=" . self::$ver;
 
         $response = Http::attach(
@@ -285,16 +344,13 @@ class DiscoveryController extends Controller
             ->withBasicAuth("apikey", self::$key)
             ->post($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    static public function DocumentsDetails(Request $request)
+    static public function DocumentsDetails(string $environmentId, string $collectionId, string $documentId)
     {
-        $environmentId = $request->input('env_id');
-        $collectionId = $request->input('coll_id');
-        $documentId = $request->input('doc_id');
-
-        $endpoint = self::$url . "/v1"
+        $endpoint = self::$url
+            . "/v1"
             . "/environments" . "/" . $environmentId
             . "/collections" . "/" . $collectionId
             . "/documents" . "/" . $documentId
@@ -303,17 +359,15 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    static public function DocumentsUpdate(Request $request)
+    static public function DocumentsUpdate(string $environmentId, string $collectionId, string $documentId, $file)
     {
-        $environmentId = $request->input('env_id');
-        $collectionId = $request->input('coll_id');
-        $documentId = $request->input('doc_id');
-        $file = $request->file('document');
+        //$file = $request->file('document');
 
-        $endpoint = self::$url . "/v1"
+        $endpoint = self::$url
+            . "/v1"
             . "/environments" . "/" . $environmentId
             . "/collections" . "/" . $collectionId
             . "/documents" . "/" . $documentId
@@ -326,16 +380,13 @@ class DiscoveryController extends Controller
             ->withBasicAuth("apikey", self::$key)
             ->post($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    static public function DocumentsDelete(Request $request)
+    static public function DocumentsDelete(string $environmentId, string $collectionId, string $documentId)
     {
-        $environmentId = $request->input('env_id');
-        $collectionId = $request->input('coll_id');
-        $documentId = $request->input('doc_id');
-
-        $endpoint = self::$url . "/v1"
+        $endpoint = self::$url
+            . "/v1"
             . "/environments" . "/" . $environmentId
             . "/collections" . "/" . $collectionId
             . "/documents" . "/" . $documentId
@@ -344,18 +395,15 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->delete($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    /* Queries */
+    /* Queries (Collection) */
 
-    public function QueriesShort(Request $request)
+    static public function CollectionQueryShort(string $environmentId, string $collectionId, string $queryString)
     {
-        $environmentId = $request->input('env_id');
-        $collectionId = $request->input('coll_id');
-        $queryString =$request->input('query');
-
-        $endpoint = self::$url . "/v1"
+        $endpoint = self::$url
+            . "/v1"
             . "/environments" . "/" . $environmentId
             . "/collections" . "/" . $collectionId
             . "/query"
@@ -365,27 +413,40 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 
-    public function QueriesLong(Request $request)
+    static public function CollectionQueryLong(string $environmentId, string $collectionId, string $queryString)
     {
-        $environmentId = $request->input('env_id');
-        $collectionId = $request->input('coll_id');
-        $queryString =$request->input('query');
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/collections" . "/" . $collectionId
+            . "/query"
+            . "?version=" . self::$ver;
 
         $data = [
             'query' => $queryString,
         ];
 
-        $endpoint = self::$url . "/v1/environments"
-            . "/" . $environmentId . "/collections"
-            . "/" . $collectionId . "/query"
+        $response = Http::withBasicAuth("apikey", self::$key)
+            ->post($endpoint);
+
+        return $response->json();
+    }
+
+    static public function CollectionNotices(string $environmentId, array $collectionIds)
+    {
+        $endpoint = self::$url
+            . "/v1"
+            . "/environments" . "/" . $environmentId
+            . "/notices"
+            . "?" . "collection_ids=" . implode(",", $collectionIds)
             . "?version=" . self::$ver;
 
         $response = Http::withBasicAuth("apikey", self::$key)
             ->post($endpoint);
 
-        return $response->collect();
+        return $response->json();
     }
 }
