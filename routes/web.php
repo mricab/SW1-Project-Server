@@ -4,32 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DiscoveryController;
 use App\Http\Controllers\ViewController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-/**
- *
- * Navigation Routes
- *
- */
-
-Route::get( 'environments',  [ViewController::class, 'EnvironmentsView'])->name('view.environments');
-Route::post('environment',   [ViewController::class, 'EnvironmentView'])->name('view.environment');
-Route::post('configurations',[ViewController::class, 'ConfigurationsView'])->name('view.configurations');
-Route::post('collections',   [ViewController::class, 'CollectionsView'])->name('view.collections');
-Route::post('collection',    [ViewController::class, 'CollectionView'])->name('view.collection');
-Route::post('documents',     [ViewController::class, 'DocumentsView'])->name('view.documents');
-Route::post('queries',       [ViewController::class, 'QueriesView'])->name('view.queries');
-
-
 /**
  *
  * DiscoveryController Routes
