@@ -33,7 +33,7 @@ class DiscoveryController extends Controller
             ->withBasicAuth("apikey", self::$key)
             ->post($endpoint, $data);
 
-        return $response->json();
+        return $response;
     }
 
     static public function EnvironmentsList()
@@ -46,7 +46,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     /* Single Environment */
@@ -61,7 +61,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function EnvironmentUpdate(string $environmentId, string $name, string $description)
@@ -80,7 +80,7 @@ class DiscoveryController extends Controller
             ->withBasicAuth("apikey", self::$key)
             ->put($endpoint, $data);
 
-        return $response->json();
+        return $response;
     }
 
     static public function EnvironmentDelete(string $environmentId)
@@ -93,7 +93,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->delete($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function EnvironmentFields(string $environmentId, array $collectionIds)
@@ -108,7 +108,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     /* Configurations */
@@ -129,7 +129,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     /* Configuration */
@@ -145,7 +145,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function ConfigurationUpdate()
@@ -164,12 +164,12 @@ class DiscoveryController extends Controller
     $response = Http::withBasicAuth("apikey", self::$key)
         ->delete($endpoint);
 
-    return $response->json();
+    return $response;
     }
 
     /* Collections */
 
-    public function CollectionsCreate(string $environmentId, string $configurationId, string $name, string $description, string $language)
+    static public function CollectionsCreate(string $environmentId, string $configurationId, string $name, string $description, string $language)
     {
         $endpoint = self::$url
             . "/v1"
@@ -188,7 +188,7 @@ class DiscoveryController extends Controller
             ->withBasicAuth("apikey", self::$key)
             ->post($endpoint, $data);
 
-        return $response->json();
+        return $response;
     }
 
     static public function CollectionsList(string $environmentId)
@@ -202,7 +202,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     /* Query (Multiple Collections) */
@@ -221,7 +221,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function CollectionsQueryLong(string $environmentId, array $collectionIds, string $queryString)
@@ -240,7 +240,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->post($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function CollectionsNotices(string $environmentId, array $collectionIds)
@@ -255,7 +255,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->post($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     /* Single Collection */
@@ -271,7 +271,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function CollectionFields(string $environmentId, string $collectionId)
@@ -286,7 +286,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function CollectionUpdate(string $environmentId, string $configurationId, string $collectionId, string $name, string $description)
@@ -307,7 +307,7 @@ class DiscoveryController extends Controller
             ->withBasicAuth("apikey", self::$key)
             ->put($endpoint, $data);
 
-        return $response->json();
+        return $response;
     }
 
     static public function CollectionDelete(string $environmentId, string $collectionId)
@@ -321,7 +321,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->delete($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     /* Documents*/
@@ -344,7 +344,7 @@ class DiscoveryController extends Controller
             ->withBasicAuth("apikey", self::$key)
             ->post($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function DocumentsDetails(string $environmentId, string $collectionId, string $documentId)
@@ -359,7 +359,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function DocumentsUpdate(string $environmentId, string $collectionId, string $documentId, $file)
@@ -380,7 +380,7 @@ class DiscoveryController extends Controller
             ->withBasicAuth("apikey", self::$key)
             ->post($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function DocumentsDelete(string $environmentId, string $collectionId, string $documentId)
@@ -395,7 +395,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->delete($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     /* Queries (Collection) */
@@ -413,7 +413,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->get($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function CollectionQueryLong(string $environmentId, string $collectionId, string $queryString)
@@ -432,7 +432,7 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->post($endpoint);
 
-        return $response->json();
+        return $response;
     }
 
     static public function CollectionNotices(string $environmentId, array $collectionIds)
@@ -447,6 +447,6 @@ class DiscoveryController extends Controller
         $response = Http::withBasicAuth("apikey", self::$key)
             ->post($endpoint);
 
-        return $response->json();
+        return $response;
     }
 }

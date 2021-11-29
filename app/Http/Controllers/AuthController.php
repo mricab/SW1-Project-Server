@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Http\Controllers\ApplicationController;
 
 class AuthController extends Controller
 {
@@ -26,9 +27,23 @@ class AuthController extends Controller
         }
         $request['password']=Hash::make($request['password']);
         $request['remember_token'] = Str::random(10);
+
         $user = User::create($request->toArray());
+        $environmentId = ApplicationController::CreateUserEnvironment($user);
+        if($environmentId) {
+            $user->environment = $environmentId;
+            $user->save();
+        }
+        else {
+            $response = ["message" => "Internal problem. Please try again later."];
+            return response($response, 422);
+        }
+
         $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-        $response = ['token' => $token];
+        $response = [
+            'token' => $token,
+            'environment' => $environmentId,
+        ];
         return response($response, 200);
     }
 
